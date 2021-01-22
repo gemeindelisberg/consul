@@ -15,7 +15,10 @@ class SDG::RelatedListSelectorComponent < ApplicationComponent
 
   def goals_and_targets
     goals.map do |goal|
-      [goal, *goal.targets.sort]
+      global_targets = goal.targets
+      local_targets = SDG::LocalTarget.where(target: [global_targets])
+      targets = global_targets + local_targets
+      [goal, targets.sort]
     end.flatten
   end
 
